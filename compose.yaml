@@ -1,0 +1,39 @@
+services:
+  kaspi_app:
+    build:
+      context: ./backend
+    image: node-kaspi:latest
+    container_name: kaspi_app
+    restart: unless-stopped
+    command: sleep infinity #CHANGE WHEN READY
+    environment:
+      - NODE_ENV=development #CHANGE WHEN READY
+      - DB_HOST=kaspi_postgres   
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}  
+      - SHOPIFY_TOKEN=${SHOPIFY_ACCESS_TOKEN}
+      - KASPI_TOKEN=${KASPI_ACCESS_TOKEN}
+    depends_on:
+      kaspi_postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+  kaspi_postgres:
+    image: postgres:16
+    container_name: kaspi_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
