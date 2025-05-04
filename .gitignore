@@ -1,5 +1,5 @@
 /backend/node_modules/
-/postgres/
+/database/db_data/
 
 *.log
 .env
