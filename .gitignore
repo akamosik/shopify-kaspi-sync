@@ -1,6 +1,7 @@
-/backend/node_modules/
 /database/db_data/
-
+.DS_Store
+.AppleDouble
+.LSOverride
 *.log
 .env
 

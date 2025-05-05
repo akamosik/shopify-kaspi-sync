@@ -1,7 +1,7 @@
 {
     "name": "kaspi_sync",
     "version": "1.0.0",
-    "description": "shopify extension to synchronize shopify store with kaspi marketplace",
+    "description": "small node.js app to synchronize shopify store with kaspi marketplace",
     "scripts": {
         "start": "node index.js"
     },
