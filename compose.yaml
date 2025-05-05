@@ -21,7 +21,7 @@ services:
       kaspi_postgres:
         condition: service_healthy
     volumes:
-      - ./backend:/app
+      - ./app:/app
       - /app/node_modules
 
   kaspi_postgres:
