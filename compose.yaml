@@ -1,7 +1,7 @@
 services:
   kaspi_app:
     build:
-      context: ./backend
+      context: ./app
     image: node-kaspi:latest
     container_name: kaspi_app
     restart: unless-stopped
