@@ -1,0 +1,46 @@
+query getProducts ($first: Int!, $after: String) {
+  products(first: $first, after: $after, query: "status:active") {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        id
+        title
+        handle
+        status
+        descriptionHtml
+        vendor
+        variants(first: 100) {
+          nodes {
+            id
+            price
+            sellableOnlineQuantity
+            selectedOptions {
+              name
+              value
+            }
+          }
+        }
+        metafields(first: 100, namespace: "kaspi") {
+          nodes {
+            key
+            value
+            type
+          }
+        }
+        media(first: 50) {
+          nodes {
+            ... on MediaImage {
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
