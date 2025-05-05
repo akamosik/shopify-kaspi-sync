@@ -4,10 +4,8 @@ query getProducts ($first: Int!, $after: String) {
       hasNextPage
       endCursor
     }
-    edges {
-      cursor
-      node {
-        id
+    nodes {
+      id
         title
         handle
         status
@@ -40,7 +38,6 @@ query getProducts ($first: Int!, $after: String) {
             }
           }
         }
-      }
     }
   }
 }
