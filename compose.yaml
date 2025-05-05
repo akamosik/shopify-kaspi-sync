@@ -13,7 +13,9 @@ services:
       - DB_NAME=${POSTGRES_DB}
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}  
+      - SHOPIFY_ENDPOINT=${SHOPIFY_ENDPOINT}
       - SHOPIFY_TOKEN=${SHOPIFY_ACCESS_TOKEN}
+      - KASPI_ENDPOINT = ${KASPI_ENDPOINT}
       - KASPI_TOKEN=${KASPI_ACCESS_TOKEN}
     depends_on:
       kaspi_postgres:
