@@ -2,7 +2,7 @@ services:
   kaspi_app:
     build:
       context: ./app
-    image: node-kaspi:latest
+    image: node-kaspi
     container_name: kaspi_app
     restart: unless-stopped
     command: sleep infinity #CHANGE WHEN READY
@@ -15,14 +15,14 @@ services:
       - DB_PASSWORD=${POSTGRES_PASSWORD}  
       - SHOPIFY_ENDPOINT=${SHOPIFY_ENDPOINT}
       - SHOPIFY_TOKEN=${SHOPIFY_ACCESS_TOKEN}
-      - KASPI_ENDPOINT = ${KASPI_ENDPOINT}
+      - KASPI_ENDPOINT=${KASPI_ENDPOINT}
       - KASPI_TOKEN=${KASPI_ACCESS_TOKEN}
     depends_on:
       kaspi_postgres:
         condition: service_healthy
     volumes:
       - ./app:/app
-      - /app/node_modules
+      - node_modules_cache:/app/node_modules
 
   kaspi_postgres:
     image: postgres:16
@@ -40,4 +40,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+volumes:
+  node_modules_cache:
 

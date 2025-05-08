@@ -1,12 +1,20 @@
-/database/db_data/
+# Mac Files 
 .DS_Store
 .AppleDouble
 .LSOverride
-*.log
+
+
+# Database contents
+/database/db_data/
+
+# Secrets
 .env
 
-dist/
-*.local
+# Build
+/app/build/
 
+# Misc
 .vscode/
+*.local
+*.log
 *.tar
