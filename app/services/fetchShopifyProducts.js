@@ -1,5 +1,6 @@
 import fs from "fs";
-import { makeShopifyRequest } from "./makeShopifyRequest.js";  
+import { makeShopifyRequest } from "@services/makeShopifyRequest.ts";  
+
 
 export async function fetchShopifyProducts() {
     let hasNextPage = true;
