@@ -1,3 +1,62 @@
+export function transformProducts(variants){
+
+    const kaspiProducts = [];
+
+    for (const variant of variants){
+
+        const kaspiCatogoriesMetafield = variant.metafields.find((item)=>item.key==="category");
+
+        if (!kaspiCatogoriesMetafield){
+            console.warn(`Product ${variant.product_id} - missing the 'categories' metafield. Skipping.`); 
+            continue;
+        }
+
+        const categories = JSON.parse(kaspiCatogoriesMetafield.value);
+
+        if (!Array.isArray(categories) || categories.length == 0){
+            console.warn(`Product ${variant.product_id} - category field is invalid array or empty. Skipping.`);
+            continue;
+        }
+
+        for (const category of categories){
+
+            kaspiProducts.push(
+                {
+                    sku: constructSKU(variant.handle, variant.options, category),
+                    product_id: variant.product_id,
+                    variant_id: variant.variant_id,
+                    title: variant.title,
+                    brand: resolveBrand(variant.brand),
+                    category: resolveCategory(category),
+                    description: cleanDescription(variant.descriptionHtml),
+                    attributes: mapAttributes(variant.metafields, variant.options),
+                    price: variant.price,
+                    stock: variant.stock, 
+                    images: variant.images
+                }
+            ); 
+        } 
+    }
+    return kaspiProducts;
+}
+
+function constructSKU(handle, options, category){
+
+
+
+}
+
+function resolveBrand(brand){
+
+
+}
+
+function resolveCategory(category){
+
+
+
+}
+
 function cleanDescription(desc) {
     const text = desc
         .replace(/<br\s*\/?>/g, '\n')
@@ -29,53 +88,7 @@ function cleanDescription(desc) {
     }
 }
 
-
-function mapAttributes(){
-
-    
-}
-
-export function transformProducts(variants){
-
-    const kaspiProducts = [];
-
-    for (const variant of variants){
-
-        const {
-            product_id,
-            variant_id,
-            handle,
-            title,
-            brand, 
-            descriptionHtml,
-            options,
-            metafields,
-            price,
-            stock,
-            images
-        } = variant;
-
-        const kaspiCatogoriesMetafield = metafields.find((item)=>item.key==="category");
-
-        if (!kaspiCatogoriesMetafield){
-            console.warn(`Product ${product_id} - missing the 'categories' metafield. Skipping.`); 
-            continue;
-        }
-
-        const categories = JSON.parse(kaspiCatogoriesMetafield.value);
-
-        if (!Array.isArray(categories) || categories.length == 0){
-            console.warn(`Product ${product_id} - category field is invalid array or empty. Skipping.`);
-            continue;
-        }
-
-        for (const category of categories){
-
-            
-        } 
-
-        
-    }
+function mapAttributes(metafields, options){
 
 }
 

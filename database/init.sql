@@ -1,9 +1,12 @@
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
 
-    product_id TEXT NOT NULL, 
-    variant_id TEXT NOT NULL UNIQUE,
     sku TEXT NOT NULL UNIQUE,
+
+    product_id TEXT NOT NULL, 
+    variant_id TEXT NOT NULL,
+
+    
     title TEXT NOT NULL,
     brand TEXT NOT NULL,
     category TEXT NOT NULL,
@@ -17,7 +20,6 @@ CREATE TABLE products (
     last_synced TIMESTAMP,
     kaspi_upload_code TEXT, 
     delisted BOOLEAN DEFAULT FALSE
-
 )
 
 
