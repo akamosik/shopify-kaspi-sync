@@ -1,5 +1,8 @@
-import { fetchShopifyProducts } from "../services/fetchShopifyProducts.js";
+import { fetchShopifyProducts } from "/app/services/fetchShopifyProducts.js";
+import {transformProducts} from "/app/services/transformProducts.js"
 
-fetchShopifyProducts()
-  .then(() => console.log("Done"))
-  .catch(err => console.error("Error:", err));
+const variants = await fetchShopifyProducts();
+transformProducts(variants);
+
+
+

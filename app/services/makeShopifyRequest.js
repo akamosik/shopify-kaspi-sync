@@ -1,4 +1,4 @@
-import {shopifyConfig} from "../config/api.js";
+import {shopifyConfig} from "/app/config/api.js";
 
 export async function makeShopifyRequest(query, variables){
     try{
@@ -24,6 +24,5 @@ export async function makeShopifyRequest(query, variables){
     } 
     catch(err){
         console.error("Failed to fetch from Shopify", err.message);
-        // throw err; // throw the error upstream
     }
 }
