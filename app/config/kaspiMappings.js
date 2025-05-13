@@ -1,0 +1,40 @@
+export const attributeMapping = {
+    subcategory: "Shoes*Model",
+    color: "Shoes*Colour",
+    material: "Shoes*Material",
+    season: "Shoes*Season",
+    manufacturer_code: "Shoes*Manufacturer code",
+    country: "'Shoes*Country",
+    lining_material: "Shoes*Lining material",
+    sole_material: "Shoes*Sole material", 
+    insole_material: "Shoes*Insole material",
+    clasp: "Shoes*Clasp", 
+    style: "Shoes*Style", 
+    technology: "Shoes*Technology"
+}
+
+export const selectedCategories = new Set([
+    "Мужские кроссовки",
+    "Мужские кеды",
+    "Мужские слипоны",
+    "Мужские эспадрильи",
+    "Мужские ботинки",
+    "Мужские мокасины",
+    "Мужские сандалии",
+    "Мужские сапоги",
+    "Мужские туфли",
+    "Женские кроссовки",
+    "Женские кеды",
+    "Женские мюли",
+    "Женские сабо",
+    "Женские сандалии",
+    "Женские босоножки",
+    "Женские слипоны",
+    "Женские эспадрильи",
+    "Женские балетки",
+    "Женские ботильоны",
+    "Женские ботинки",
+    "Женские мокасины",
+    "Женские сапоги",
+    "Женские туфли"
+]);
