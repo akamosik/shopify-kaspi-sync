@@ -1,7 +1,7 @@
-import {resetProductMappings, batchInsertCategories, batchInsertAttributes, batchInsertAttributeValues} from "../db/productMappings.js"
+import * as DBProductMappings from "../db/productMappings.js"
 import {pool} from "../config/dbConfig.js"
 import {getKaspiCategories, getKaspiAttributes, getKaspiAttributeValues} from "../api/kaspi/requests.js"
-import {selectedCategories} from "../config/kaspiMappings.js"
+import { selectedCategories } from "../config/kaspiMappings.js"
 
 export async function updateKaspiProductMappings(){
     const client = await pool.connect();
@@ -9,50 +9,47 @@ export async function updateKaspiProductMappings(){
     try{
         await client.query("BEGIN");
 
-        await resetProductMappings(client);
-
-        const categoriesData = [];
-        const attributesData = [];
-        const attributeValuesData = [];
+        await DBProductMappings.resetProductMappings(client);
 
         const categories = await getKaspiCategories(selectedCategories);
 
         for (const cat of categories){
+            await DBProductMappings.insertCategory({
+                code: cat.code, 
+                title: cat.title}, client);
 
-            categoriesData.push({
-                code: cat.code,
-                title: cat.title
-            });
-            
             const attributes = await getKaspiAttributes(cat.code);
 
-            for (const attr of attributes){
-                attributesData.push({
+            const attriubutesPromises = attributes.map(async (attr) =>{
+                await DBProductMappings.insertAttribute({
                     code: attr.code,
                     category_code: cat.code, 
                     type: attr.type,
                     multi_valued: attr.multiValued,
                     mandatory: attr.mandatory
-                });
+
+                }, client);
 
                 if (attr.type==="enum"){
                     const attribute_values = await getKaspiAttributeValues(cat.code, attr.code); 
 
-                    for (const val of attribute_values){
-                        attributeValuesData.push({
+                    const valuesPromises = attribute_values.map(async (val)=>{
+                        await DBProductMappings.InsertAttributeValue({
                             attribute_code: attr.code,
                             category_code: cat.code, 
                             value_code: val.code,
                             value_name: val.name
-                        });
-                    }
-                }
-            }
-        }
+                        }, client);
+                    });
 
-        await batchInsertCategories(categoriesData, client);
-        await batchInsertAttributes(attributesData, client);
-        await batchInsertAttributeValues(attributeValuesData, client);
+                    await Promise.all(valuesPromises);
+                }
+
+            }); 
+            
+            await Promise.all(attriubutesPromises);
+
+        }
 
         await client.query("COMMIT");
 
