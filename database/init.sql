@@ -1,3 +1,6 @@
+CREATE SCHEMA app;
+CREATE SCHEMA mappings;
+
 CREATE TABLE app.products (
     id SERIAL PRIMARY KEY,
 
@@ -20,7 +23,7 @@ CREATE TABLE app.products (
     last_synced TIMESTAMP,
     kaspi_upload_code TEXT, 
     delisted BOOLEAN DEFAULT FALSE
-)
+);
 
 CREATE TABLE mappings.categories (
   code TEXT PRIMARY KEY,
@@ -29,7 +32,7 @@ CREATE TABLE mappings.categories (
 
 CREATE TABLE mappings.attributes (
   code TEXT NOT NULL,
-  category_code TEXT REFERENCES categories(code),
+  category_code TEXT REFERENCES mappings.categories(code),
   type TEXT NOT NULL,
   multi_valued BOOLEAN NOT NULL,
   mandatory BOOLEAN NOT NULL,
@@ -43,6 +46,6 @@ CREATE TABLE mappings.attribute_values (
   value_name TEXT NOT NULL,
   PRIMARY KEY (attribute_code, category_code, value_code),
   FOREIGN KEY (attribute_code, category_code) 
-    REFERENCES attributes(code, category_code)
+    REFERENCES mappings.attributes(code, category_code)
 );
 
