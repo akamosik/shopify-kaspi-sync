@@ -20,7 +20,7 @@ export async function updateKaspiProductMappings(){
 
             const attributes = await getKaspiAttributes(cat.code);
 
-            for (const attr of attributes){
+            const attriubutesPromises = attributes.map(async (attr) =>{
                 await DBProductMappings.insertAttribute({
                     code: attr.code,
                     category_code: cat.code, 
@@ -32,18 +32,23 @@ export async function updateKaspiProductMappings(){
 
                 if (attr.type==="enum"){
                     const attribute_values = await getKaspiAttributeValues(cat.code, attr.code); 
-                    for (const val of attribute_values){
+
+                    const valuesPromises = attribute_values.map(async (val)=>{
                         await DBProductMappings.InsertAttributeValue({
                             attribute_code: attr.code,
                             category_code: cat.code, 
                             value_code: val.code,
                             value_name: val.name
                         }, client);
-                    }
+                    });
+
+                    await Promise.all(valuesPromises);
                 }
 
-                
-            }
+            }); 
+            
+            await Promise.all(attriubutesPromises);
+
         }
 
         await client.query("COMMIT");
