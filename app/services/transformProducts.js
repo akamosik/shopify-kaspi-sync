@@ -20,6 +20,11 @@ export function transformProducts(variants){
 
         for (const category of categories){
 
+            const sku = constructSKU(variant.variant_id, category);
+            const category_code = resolveCategory(category);
+            
+
+
             kaspiProducts.push(
                 {
                     sku: constructSKU(variant.handle, variant.options, category),
@@ -47,13 +52,11 @@ function constructSKU(handle, options, category){
 }
 
 function resolveBrand(brand){
-
+    
 
 }
 
 function resolveCategory(category){
-
-
 
 }
 
@@ -89,6 +92,7 @@ function cleanDescription(desc) {
 }
 
 function mapAttributes(metafields, options){
+
 
 }
 

@@ -7,7 +7,7 @@ export async function fetchShopifyProducts() {
     let cursorEnd = null;
     const outputVariants = [];
 
-    const query = fs.readFileSync("/app/api_queries/getProducts.gql", "utf-8");
+    const query = fs.readFileSync("/app/queries/getShopifyProducts.gql", "utf-8");
     
     while(hasNextPage){
         const variables = {
