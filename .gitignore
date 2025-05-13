@@ -9,6 +9,7 @@
 
 # Secrets
 .env
+/app/exports/price_list.xml
 
 # Build
 /app/build/
