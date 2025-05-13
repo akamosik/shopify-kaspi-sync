@@ -1,6 +1,9 @@
-import {shopifyConfig} from "/app/config/api.js";
+import path from "path"
+import fs from "fs";
+import {appPaths} from "../../config/appPaths.js"
+import {shopifyConfig} from "../../config/apiConfig.js";
 
-export async function makeShopifyRequest(query, variables){
+async function makeShopifyRequest(query, variables){
     try{
         const response = await fetch(shopifyConfig.endpoint, {
             method: "POST",
@@ -24,5 +27,14 @@ export async function makeShopifyRequest(query, variables){
     } 
     catch(err){
         console.error("Failed to fetch from Shopify", err.message);
+        throw err;
     }
+}
+
+export async function getShopifyProducts(variables){
+
+    const queryPath = path.join(appPaths.shopifyQueries, "getProducts.gql");
+    const query = fs.readFileSync(queryPath, "utf-8");
+
+    return await makeShopifyRequest(query, variables);
 }

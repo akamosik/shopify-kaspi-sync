@@ -1,3 +1,5 @@
+import fs from "fs"
+
 export function transformProducts(variants){
 
     const kaspiProducts = [];
@@ -21,20 +23,21 @@ export function transformProducts(variants){
         for (const category of categories){
 
             const sku = constructSKU(variant.variant_id, category);
+            const brand = resolveBrand(variant.vendor);
             const category_code = resolveCategory(category);
-            
-
+            const description = cleanDescription(variant.descriptionHtml); 
+            const attributes = mapAttributes(variant.metafields, variant.options, category_code);
 
             kaspiProducts.push(
                 {
-                    sku: constructSKU(variant.handle, variant.options, category),
+                    sku: sku,
                     product_id: variant.product_id,
                     variant_id: variant.variant_id,
                     title: variant.title,
-                    brand: resolveBrand(variant.brand),
-                    category: resolveCategory(category),
-                    description: cleanDescription(variant.descriptionHtml),
-                    attributes: mapAttributes(variant.metafields, variant.options),
+                    brand: brand,
+                    category_code: category_code,
+                    description: description,
+                    attributes: attributes,
                     price: variant.price,
                     stock: variant.stock, 
                     images: variant.images

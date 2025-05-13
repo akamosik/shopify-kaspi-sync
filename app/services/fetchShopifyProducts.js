@@ -1,13 +1,9 @@
-import fs from "fs";
-import { makeShopifyRequest } from "/app/services/makeShopifyRequest.js";  
-
+import { getShopifyProducts } from "../api/shopify/requests.js"
 
 export async function fetchShopifyProducts() {
     let hasNextPage = true;
     let cursorEnd = null;
     const outputVariants = [];
-
-    const query = fs.readFileSync("/app/queries/getShopifyProducts.gql", "utf-8");
     
     while(hasNextPage){
         const variables = {
@@ -15,7 +11,7 @@ export async function fetchShopifyProducts() {
             after: cursorEnd
         };
 
-        const data = await makeShopifyRequest(query, variables);
+        const data = await getShopifyProducts(variables);
         
         const shopifyProducts = data.products.nodes;
         
@@ -32,7 +28,7 @@ export async function fetchShopifyProducts() {
                   variant_id: variant.id.split('/').pop(), 
                   handle: product.handle, 
                   title: product.title,
-                  brand: product.vendor,  
+                  vendor: product.vendor,  
                   descriptionHtml: product.descriptionHtml,
                   options: variant.selectedOptions,
                   metafields: product.metafields.nodes || [], 
