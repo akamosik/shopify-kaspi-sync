@@ -3,7 +3,7 @@ import {pool} from "../config/dbConfig.js"
 
 export async function resetProductMappings(client=null){
     await (client || pool).query(
-        `TRUNCATE mappings.categories, mappings.attributes, mapping.attribute_values CASCADE`
+        `TRUNCATE mappings.categories, mappings.attributes, mappings.attribute_values CASCADE`
     );
 }
 

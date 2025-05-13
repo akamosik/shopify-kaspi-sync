@@ -30,16 +30,19 @@ export async function updateKaspiProductMappings(){
 
                 }, client);
 
-                const attribute_values = await getKaspiAttributeValues(cat.code, attr.code); 
-
-                for (const val of attribute_values){
-                    await DBProductMappings.InsertAttributeValue({
-                        attribute_code: attr.code,
-                        category_code: cat.code, 
-                        value_code: val.code,
-                        value_name: val.name
-                    }, client);
+                if (attr.type==="enum"){
+                    const attribute_values = await getKaspiAttributeValues(cat.code, attr.code); 
+                    for (const val of attribute_values){
+                        await DBProductMappings.InsertAttributeValue({
+                            attribute_code: attr.code,
+                            category_code: cat.code, 
+                            value_code: val.code,
+                            value_name: val.name
+                        }, client);
+                    }
                 }
+
+                
             }
         }
 
