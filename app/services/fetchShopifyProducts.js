@@ -24,17 +24,17 @@ export async function fetchShopifyProducts() {
             
             product.variants.nodes.forEach((variant) => {
                 outputVariants.push({
-                  product_id: product.id.split('/').pop(), 
-                  variant_id: variant.id.split('/').pop(), 
+                  product_id: product.id, 
+                  variant_id: variant.id, 
                   handle: product.handle, 
                   title: product.title,
                   vendor: product.vendor,  
                   descriptionHtml: product.descriptionHtml,
-                  options: variant.selectedOptions,
+                  options: variant.selectedOptions || [],
                   metafields: product.metafields.nodes || [], 
                   price: variant.price, 
                   stock: variant.sellableOnlineQuantity ?? 0,  
-                  images: product.media.nodes.map((item)=> ({url: item.image?.url})) || []          
+                  media_nodes: product.media.nodes || []         
                 });
             });
         }

@@ -1,7 +1,7 @@
-import * as DBProdMap from "../db/productMappings.js"
+import * as DBProdMap from "../db/dbmapping.js"
 import {pool} from "../config/dbConfig.js"
 import {getKaspiCategories, getKaspiAttributes, getKaspiAttributeValues} from "../api/kaspi/requests.js"
-import { selectedCategories } from "../config/kaspiMappings.js"
+import { selectedCategories } from "../config/appMappings.js"
 
 export async function updateKaspiProductMappings(){
     const client = await pool.connect();

@@ -10,6 +10,7 @@
 # Secrets
 .env
 /app/exports/price_list.xml
+/app/exports/kaspi_example.json
 
 # Build
 /app/build/

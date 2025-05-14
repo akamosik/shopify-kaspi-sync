@@ -33,6 +33,33 @@ export async function batchInsertCategories(categoriesData, client=null){
     await (client||pool).query(sql, values);
 }
 
+
+export async function getCategory({code=null, title=null}={}){
+
+    let query = `SELECT * FROM mappings.categories`;
+
+    const values = [];
+    const conditions = [];
+
+    if(code || title){
+        if(code){
+            values.push(code);
+            conditions.push(`code = $${values.length}`);
+        }
+
+        if(title){
+            values.push(title);
+            conditions.push(`title = $${values.length}`);
+        }
+
+        query+=` WHERE ${conditions.join(" OR ")}`;
+    }
+
+    const result = await pool.query(query, values);
+    return result.rows;
+        
+}
+
 export async function insertAttribute({code, category_code, type, multi_valued, mandatory}, client=null){
     await (client || pool).query(
         `INSERT INTO mappings.attributes (code, category_code, type, multi_valued, mandatory)
