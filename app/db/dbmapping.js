@@ -101,6 +101,15 @@ export async function insertAttributeValue({attribute_code, category_code, value
 
 }
 
+export async function getAttributeValues(attr_code, cat_code){
+
+    const result = await pool.query(`SELECT * FROM mappings.attribute_values 
+                                     WHERE (attribute_code=$1 AND category_code=$2)`, [attr_code, cat_code]);
+
+    return result.rows;
+
+}
+
 export async function batchInsertAttributeValues(attributeValuesData, client=null){
 
     if (attributeValuesData.length===0) {return;}

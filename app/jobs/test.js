@@ -3,13 +3,17 @@ import {transformProducts} from "../services/transformProducts.js"
 import {appPaths} from "../config/appPaths.js"
 import path from "path"
 import fs from "fs"
+import { updateKaspiProductMappings } from "./updateKaspiProductMappings.js"
+
 
 
 const variants = await fetchShopifyProducts();
-// const kaspiProducts = await transformProducts(variants);
 
-// variants.forEach(item=>console.log(item.metafields + '\n'));
+const kaspiProducts = await transformProducts(variants);
 
-const variant = variants[0];
+const filePath = path.join(appPaths.exports, 'kaspiProducts.json');
 
-console.log(variant.metafields)
+
+
+fs.writeFileSync(filePath, JSON.stringify(kaspiProducts, null, 2), 'utf8');
+    console.log(`Kaspi products saved to ${filePath}`);

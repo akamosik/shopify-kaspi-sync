@@ -71,20 +71,18 @@ async function resolveCategory(category_title){
     const category = await DBProdMap.getCategoryByTitle(category_title);
     
     if(!category){
-        return category.code;
+        throw new Error(`Category not found. Input = ${category_title}`);
     }
 
-    throw new Error(`Category not found. Input = ${category_title}`);
-    
+    return category.code;
 }
 
 function constructIdentifier(id, category_code){
 
     const uniqueIdentifier = `${id}${category_code}`.replace(/\s+/g, '');
     const hash = crypto.createHash('sha256').update(uniqueIdentifier).digest('hex');
-    const id = hash.slice(0, 10).toUpperCase();
+    return hash.slice(0, 10).toUpperCase();
 
-    return id;
 }
 
 function resolveBrand(vendor){
@@ -136,16 +134,23 @@ function cleanDescription(desc) {
 
 async function mapAttributes(category_code, metafields, options){
     /* 
-    the most govnokod part, since for now i have hardcoded metafields on shopify side, instead of dynamic UI extension
-    to generate always valid JSON mapping from shopify data to kaspi attributes.
+    this code is terrible and ugly, since for now i have hardcoded metafields on shopify side, instead of UI extension
+    to generate always valid JSON shopify-kaspi mapping. 
+    
+    will completely change this in future to generalize. The mapping should be handled on frontend, and user should be bound
+    to choose only legal values. There should be no manual translation on backend.
     */
 
-    
     const attributes = []; 
+
+    const allAttributesList = await DBProdMap.getAttributesByCategory(category_code);
+
+    const attributeMap = new Map(allAttributesList.map(attr=>[attr.code, attr]));
+
 
     for (const metafield of metafields){
 
-        if (metafield.key==="category" || metafield.key==="toggle"){
+        if (metafield.key==="category" || metafield.key==="subcategory" || metafield.key==="toggle"){
             continue;
         }
 
@@ -155,19 +160,128 @@ async function mapAttributes(category_code, metafields, options){
             continue;
         }
 
-        const attrInfo = await DBProdMap.getAttribute(attribute_code, category_code);
+        const attrInfo = attributeMap.get(attribute_code);
 
+        if (!attrInfo){
+            continue;
+        }
 
+        let value;
 
+        if (attrInfo.type==="enum"){
 
+            if (metafield.type==="list.single_line_text_field"){
+                value = JSON.parse(metafield.value);
+            }
+            
+            else{
+                value = [metafield.value];
+            }
+        }
 
+        else{
+            value = metafield.value;
+        }
 
+        attributes.push(
+            {
+                "code": attribute_code,
+                "value": value
 
-        
-
+            }
+        );
     }
 
+    // handle special cases
 
+    // always same vals
+
+    attributes.push(
+        {
+            "code": "Shoes*Additional information",
+            "value": "Босоногая Обувь"
+        }
+    );
+
+    attributes.push(
+        {
+            "code": "Shoes*Shoes sole",
+            "value": ["анатомическая"]
+        }
+    );
+
+    attributes.push(
+        {
+            "code": "Shoes*Size features",
+            "value": ["маломерит на 1 размер"]
+        }
+    );
+
+    // Size
+
+    const sizeOption = options.find(op=>op.name==="Размер" || op.name==="Size");
+    const size = sizeOption.value;
+
+    attributes.push(
+        {
+            "code": "Shoes*Size",
+            "value": [size]
+        }
+    );
+
+    attributes.push(
+        {
+            "code": "Shoes*Manufacturer size",
+            "value": size
+        }
+    );
+
+    // Gender
+
+    const genders = await DBProdMap.getAttributeValues("Shoes*Gender", category_code);
+
+    attributes.push(
+        {
+            "code": "Shoes*Gender",
+            "value": [genders[0].value_name]
+        }
+    );
+
+    // Shoes*Model
+
+    const shoeModelLegalValues = await DBProdMap.getAttributeValues("Shoes*Model", category_code);
+
+    const subcategoryMetafield = metafields.find(m => m.key === "subcategory");
+
+    const subcategory = subcategoryMetafield.value;
+
+    const matchingModel = shoeModelLegalValues.find(model => model.value_name === subcategory);
+
+    const shoemodel = matchingModel ? matchingModel.value_name : shoeModelLegalValues[0].value_name;
+
+    attributes.push(
+        {
+            "code": "Shoes*Model",
+            "value": [shoemodel]
+        }
+    );
+
+    // check if all mandatory are filled
+
+    const filledAttributeCodes = new Set(attributes.map(attr => attr.code));
+
+    const mandatoryAttributes = new Set(
+        allAttributesList.filter(attr => attr.mandatory).map(attr => attr.code)
+    );
+
+    mandatoryAttributes.forEach(mandatoryCode => {
+        if (!filledAttributeCodes.has(mandatoryCode)) {
+            throw new Error(`Missing mandatory attribute: ${mandatoryCode}`);
+        }
+    });
+
+
+    return attributes;
 
 }
 
