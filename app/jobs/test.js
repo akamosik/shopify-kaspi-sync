@@ -11,6 +11,8 @@ const variants = await fetchShopifyProducts();
 
 const kaspiProducts = await transformProducts(variants);
 
+console.log(kaspiProducts.length);
+
 const filePath = path.join(appPaths.exports, 'kaspiProducts.json');
 
 

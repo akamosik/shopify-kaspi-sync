@@ -9,8 +9,8 @@
 
 # Secrets
 .env
-/app/exports/price_list.xml
-/app/exports/kaspi_example.json
+/app/exports/
+!/app/exports/.gitkeep
 
 # Build
 /app/build/

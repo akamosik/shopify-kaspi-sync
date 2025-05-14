@@ -2,6 +2,8 @@ import * as DBProdMap from "../db/dbmapping.js"
 import crypto from "crypto"
 import {metafieldMapping} from "../config/appMappings.js"
 
+// TODO: rewrite the whole thing, also change project architecture, 
+// validations should happen on frontend, the backend should already get legal JSON and not handle костыли
 
 export async function transformProducts(variants){
 
@@ -96,7 +98,7 @@ function resolveBrand(vendor){
     if (map.hasOwnProperty(vendor)){
         return map[vendor];
     }
-    return vendor;
+    return vendor; //fallback on default, kaspi might not reject, let's see
 }
 
 
@@ -194,7 +196,7 @@ async function mapAttributes(category_code, metafields, options){
 
     // handle special cases
 
-    // always same vals
+    // always same values
 
     attributes.push(
         {
@@ -220,7 +222,7 @@ async function mapAttributes(category_code, metafields, options){
     // Size
 
     const sizeOption = options.find(op=>op.name==="Размер" || op.name==="Size");
-    const size = sizeOption.value;
+    const size = sizeOption.value; // i assume it will always exist
 
     attributes.push(
         {
@@ -245,7 +247,7 @@ async function mapAttributes(category_code, metafields, options){
             "code": "Shoes*Gender",
             "value": [genders[0].value_name]
         }
-    );
+    ); // just get whatever is default gender for category, i.e. Женские туфли -> для женщин
 
     // Shoes*Model
 
@@ -253,8 +255,10 @@ async function mapAttributes(category_code, metafields, options){
 
     const subcategoryMetafield = metafields.find(m => m.key === "subcategory");
 
-    const subcategory = subcategoryMetafield.value;
+    const a = subcategoryMetafield.value;
 
+    const subcategory = a.includes('->') ? a.split('->')[1].trim().toLowerCase() : a; // AI slop
+    
     const matchingModel = shoeModelLegalValues.find(model => model.value_name === subcategory);
 
     const shoemodel = matchingModel ? matchingModel.value_name : shoeModelLegalValues[0].value_name;
