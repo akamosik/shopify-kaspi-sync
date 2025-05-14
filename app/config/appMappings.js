@@ -1,4 +1,4 @@
-export const attributeMapping = {
+export const metafieldMapping = {
     subcategory: "Shoes*Model",
     color: "Shoes*Colour",
     material: "Shoes*Material",

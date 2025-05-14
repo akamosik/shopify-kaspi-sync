@@ -9,19 +9,23 @@ CREATE TABLE app.products (
     product_id TEXT NOT NULL, 
     variant_id TEXT NOT NULL,
 
-    
+    family_id TEXT NOT NULL,
+
     title TEXT NOT NULL,
     brand TEXT NOT NULL,
-    category TEXT NOT NULL,
+    category_code TEXT NOT NULL,
     description TEXT NOT NULL,
     attributes JSONB NOT NULL,
     price NUMERIC(10,2) NOT NULL,
     stock INTEGER NOT NULL,
     images JSONB NOT NULL,
 
-    synced_with_kaspi BOOLEAN DEFAULT FALSE, 
-    last_synced TIMESTAMP,
+    up_to_date BOOLEAN DEFAULT FALSE, 
+
+    kaspi_accepted_upload BOOLEAN DEFAULT FALSE,
+    kaspi_upload_status TEXT,
     kaspi_upload_code TEXT, 
+
     delisted BOOLEAN DEFAULT FALSE
 );
 

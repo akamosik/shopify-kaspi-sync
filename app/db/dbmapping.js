@@ -1,5 +1,6 @@
 import {pool} from "../config/dbConfig.js"
 
+/* RESETTER */
 
 export async function resetProductMappings(client=null){
     await (client || pool).query(
@@ -7,6 +8,7 @@ export async function resetProductMappings(client=null){
     );
 }
 
+/* PRODUCT CATEGORIES */
 
 export async function insertCategory({code, title}, client=null){
     await (client || pool).query(
@@ -14,6 +16,11 @@ export async function insertCategory({code, title}, client=null){
          VALUES ($1, $2)`, 
          [code, title]
     );
+}
+
+export async function getCategoryByTitle(title){
+    const result = await pool.query(`SELECT * FROM mappings.categories WHERE title=$1`, [title]);
+    return result.rows[0] || null;
 }
 
 export async function batchInsertCategories(categoriesData, client=null){
@@ -33,32 +40,7 @@ export async function batchInsertCategories(categoriesData, client=null){
     await (client||pool).query(sql, values);
 }
 
-
-export async function getCategory({code=null, title=null}={}){
-
-    let query = `SELECT * FROM mappings.categories`;
-
-    const values = [];
-    const conditions = [];
-
-    if(code || title){
-        if(code){
-            values.push(code);
-            conditions.push(`code = $${values.length}`);
-        }
-
-        if(title){
-            values.push(title);
-            conditions.push(`title = $${values.length}`);
-        }
-
-        query+=` WHERE ${conditions.join(" OR ")}`;
-    }
-
-    const result = await pool.query(query, values);
-    return result.rows;
-        
-}
+/* PRODUCT ATTRIBUTES */
 
 export async function insertAttribute({code, category_code, type, multi_valued, mandatory}, client=null){
     await (client || pool).query(
@@ -66,6 +48,21 @@ export async function insertAttribute({code, category_code, type, multi_valued, 
          VALUES ($1, $2, $3, $4, $5)`,
         [code, category_code, type, multi_valued, mandatory]
     );
+}
+
+export async function getAttribute(attr_code, cat_code){
+
+    const result = await pool.query(`SELECT * FROM mappings.attributes WHERE (code=$1 AND category_code=$2)`, [attr_code, cat_code]);
+
+    return result.rows[0] || null;
+
+}
+
+export async function getAttributesByCategory(cat_code){
+
+    const result = await pool.query(`SELECT * FROM mappings.attributes WHERE (category_code=$1)`, [cat_code]);
+
+    return result.rows;
 }
 
 export async function batchInsertAttributes(attributesData, client=null){
@@ -89,6 +86,10 @@ export async function batchInsertAttributes(attributesData, client=null){
             
     await (client || pool).query(sql, values);
 }
+
+
+/* PRODUCT ATTRIBUTE VALUES */
+
 
 export async function insertAttributeValue({attribute_code, category_code, value_code, value_name}, client=null){
 
