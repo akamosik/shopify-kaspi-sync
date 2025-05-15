@@ -22,7 +22,7 @@ CREATE TABLE app.products (
 
     up_to_date BOOLEAN DEFAULT FALSE, 
 
-    kaspi_accepted_upload BOOLEAN DEFAULT FALSE,
+    uploaded_to_kaspi BOOLEAN DEFAULT FALSE,
     kaspi_upload_status TEXT,
     kaspi_upload_code TEXT, 
 

@@ -1,4 +1,4 @@
-import * as DBProdMap from "../db/dbmapping.js"
+import * as DBProdMap from "../db/dbmappings.js"
 import {pool} from "../config/dbConfig.js"
 import {getKaspiCategories, getKaspiAttributes, getKaspiAttributeValues} from "../api/kaspi/requests.js"
 import { selectedCategories } from "../config/appMappings.js"

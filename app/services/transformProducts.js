@@ -1,4 +1,4 @@
-import * as DBProdMap from "../db/dbmapping.js"
+import * as DBProdMap from "../db/dbmappings.js"
 import crypto from "crypto"
 import {metafieldMapping} from "../config/appMappings.js"
 
