@@ -102,7 +102,7 @@ function resolveBrand(vendor){
     if (map.hasOwnProperty(vendor)){
         return map[vendor];
     }
-    return vendor; //fallback on default, kaspi might not reject, let's see
+    return vendor; //fallback on default raw value, kaspi might reject, let's see
 }
 
 
@@ -206,11 +206,11 @@ async function mapAttributes(category_code, metafields, options){
 
     const filledAttributeCodes = new Set(attributes.map(attr => attr.code));
 
-    const mandatoryAttributes = new Set(
+    const mandatoryAttributesCodes = new Set(
         allAttributesList.filter(attr => attr.mandatory).map(attr => attr.code)
     );
 
-    mandatoryAttributes.forEach(mandatoryCode => {
+    mandatoryAttributesCodes.forEach(mandatoryCode => {
         if (!filledAttributeCodes.has(mandatoryCode)) {
             throw new Error(`Missing mandatory attribute: ${mandatoryCode}`);
         }
@@ -257,10 +257,8 @@ async function mapStaticAttributes(attributes, category_code, options){
     // string manipulation to convert "Туфли -> Лоферы" to "лоферы"
 
     const subcategory = temp.includes('->') ? temp.split('->')[1].trim().toLowerCase() : temp; 
-    
     const matchingModel = shoeModelLegalValues.find(model => model.value_name === subcategory);
-
-    const shoemodel = matchingModel ? matchingModel.value_name : shoeModelLegalValues[0].value_name;
+    const shoeModel = matchingModel ? matchingModel.value_name : shoeModelLegalValues[0].value_name;
 
 
 
@@ -291,7 +289,7 @@ async function mapStaticAttributes(attributes, category_code, options){
         },
         {
             "code": "Shoes*Model",
-            "value": [shoemodel]
+            "value": [shoeModel]
         }
     );
 
