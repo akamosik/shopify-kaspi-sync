@@ -16,7 +16,5 @@ console.log(kaspiProducts.length);
 
 const filePath = path.join(appPaths.exports, 'kaspiProducts.json');
 
-
-
 fs.writeFileSync(filePath, JSON.stringify(kaspiProducts, null, 2), 'utf8');
     console.log(`Kaspi products saved to ${filePath}`);

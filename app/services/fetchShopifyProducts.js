@@ -4,8 +4,6 @@ export async function fetchShopifyProducts() {
     let hasNextPage = true;
     let cursorEnd = null;
     const outputVariants = [];
-
-    let counter = 0;
     
     while(hasNextPage){
         const variables = {
@@ -25,8 +23,6 @@ export async function fetchShopifyProducts() {
             if(!addToKaspiFlag || addToKaspiFlag.value!=="true"){
                 continue;
             }
-
-            counter+=1;
             
             product.variants.nodes.forEach((variant) => {
                 outputVariants.push({
@@ -48,8 +44,6 @@ export async function fetchShopifyProducts() {
         hasNextPage = data.products.pageInfo.hasNextPage;
         cursorEnd = data.products.pageInfo.cursorEnd;
     }
-    console.log("# of products added to kaspi \n");
-    console.log(counter);
     return outputVariants;
 }
 

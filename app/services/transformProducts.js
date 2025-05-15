@@ -199,7 +199,7 @@ async function mapAttributes(category_code, metafields, options){
     }
 
     // handle special cases (no info contained in metafields, but can be inferred from other fields)
-    await mapStaticAttributes(attributes, category_code, options);
+    await mapStaticAttributes(attributes, category_code, metafields, options);
 
 
     // check if all mandatory are filled
@@ -220,7 +220,7 @@ async function mapAttributes(category_code, metafields, options){
 
 }
 
-async function mapStaticAttributes(attributes, category_code, options){
+async function mapStaticAttributes(attributes, category_code, metafields, options){
 
     // SIZE
     const sizeOption = options.find(op=>op.name==="Размер" || op.name==="Size");
