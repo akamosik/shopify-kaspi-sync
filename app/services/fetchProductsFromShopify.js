@@ -1,6 +1,6 @@
 import { getShopifyProducts } from "../api/shopify/requests.js"
 
-export async function fetchShopifyProducts() {
+export async function fetchProductsFromShopify() {
     let hasNextPage = true;
     let cursorEnd = null;
     const outputVariants = [];

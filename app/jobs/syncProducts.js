@@ -1,7 +1,7 @@
-import { fetchShopifyProducts } from "../services/fetchShopifyProducts.js";
+import { fetchProductsFromShopify } from "../services/fetchShopifyProducts.js";
 import {transformProducts} from "../services/transformProducts.js"
 
-const variants = await fetchShopifyProducts();
+const variants = await fetchProductsFromShopify();
 
 
 console.log(variants);

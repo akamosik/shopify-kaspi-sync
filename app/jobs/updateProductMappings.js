@@ -3,7 +3,7 @@ import {pool} from "../config/dbConfig.js"
 import {getKaspiCategories, getKaspiAttributes, getKaspiAttributeValues} from "../api/kaspi/requests.js"
 import { selectedCategories } from "../config/appMappings.js"
 
-export async function updateKaspiProductMappings(){
+export async function updateProductMappings(){
     const client = await pool.connect();
 
     try{

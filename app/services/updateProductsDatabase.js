@@ -3,30 +3,32 @@ import * as DBProd from "../db/dbproducts.js"
 
 export async function updateProductsDatabase(productList){
 
-    const dbProducts = await DBProd.getExistingProducts();
+    const dbProducts = await DBProd.getAllProducts();
 
     const existing = new Map(dbProducts.map(p=>[p.sku, p]));
     const incoming = new Map(productList.map(p=>[p.sku, p]));
 
-    for (const product of productList){
+    for (const [sku, product] of incoming.entries()){
 
-        if (!existing.has(product.sku)){
-            // new
+        const existingProduct = existing.get(sku); 
 
-            await DBProd.insertOrUpdateProduct({...});
-
-            
-
+        if (!existingProduct){
+            // new product
+            await DBProd.insertProduct(product);
         }
         else{
-            // check updated
-            const currentProduct = existing[product.sku]; 
-            const changed = detectChanges(product, currentProduct);
-            if(changed){
-                await DBProd.insertOrUpdateProduct({...});
+            if(product.hash !== existingProduct.hash){ // updated product
+                await DBProd.updateProduct(sku, product);
+                await DBProd.setField(sku, {uploaded_to_kaspi: false, accepted_by_kaspi: false});
             }
-
         }
     }
 
+    for (const [sku] of existing.entries()){
+        if(!incoming.has(sku)){
+            // existing product got deleted in shopify side
+            await DBProd.setField(sku, {delisted: true});
+        }
+
+    }
 }

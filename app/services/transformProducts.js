@@ -45,8 +45,7 @@ export async function transformProducts(variants){
 
                 const images = variant.media_nodes.map((item)=> ({url: item.image?.url})) || []; 
 
-                kaspiProducts.push(
-                    {
+                const product = {
                         sku,
                         product_id,
                         variant_id,
@@ -59,8 +58,11 @@ export async function transformProducts(variants){
                         price,
                         stock, 
                         images
-                    }
-                ); 
+                    };
+
+                product.hash = computeProductHash(product);
+
+                kaspiProducts.push(product); 
             } 
         }
         catch(e){
@@ -88,6 +90,14 @@ function constructIdentifier(id, category_code){
     const uniqueIdentifier = `${id}${category_code}`.replace(/\s+/g, '');
     const hash = crypto.createHash('sha256').update(uniqueIdentifier).digest('hex');
     return hash.slice(0, 10).toUpperCase();
+
+}
+
+function computeProductHash(product){
+
+    const stringifiedProduct = JSON.stringify(product);
+
+    return crypto.createHash('sha256').update(stringifiedProduct).digest('hex');
 
 }
 

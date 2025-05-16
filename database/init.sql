@@ -20,11 +20,13 @@ CREATE TABLE app.products (
     stock INTEGER NOT NULL,
     images JSONB NOT NULL,
 
+    hash TEXT NOT NULL,
+
     uploaded_to_kaspi BOOLEAN DEFAULT FALSE,
     accepted_by_kaspi BOOLEAN DEFAULT FALSE,
     kaspi_upload_code TEXT,
 
-    delisted BOOLEAN DEFAULT FALSE
+    delisted BOOLEAN DEFAULT FALSE  
 );
 
 CREATE TABLE mappings.categories (
