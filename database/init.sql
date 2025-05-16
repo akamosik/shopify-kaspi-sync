@@ -20,11 +20,9 @@ CREATE TABLE app.products (
     stock INTEGER NOT NULL,
     images JSONB NOT NULL,
 
-    up_to_date BOOLEAN DEFAULT FALSE, 
-
     uploaded_to_kaspi BOOLEAN DEFAULT FALSE,
-    kaspi_upload_status TEXT,
-    kaspi_upload_code TEXT, 
+    accepted_by_kaspi BOOLEAN DEFAULT FALSE,
+    kaspi_upload_code TEXT,
 
     delisted BOOLEAN DEFAULT FALSE
 );
