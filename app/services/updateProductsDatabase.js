@@ -12,16 +12,15 @@ export async function updateProductsDatabase(productList){
 
         const existingProduct = existing.get(sku); 
 
-        console.log(product.title);
-        console.log(product.attributes);
-        console.log("\n");
-
         if (!existingProduct){
-            // new product
+            // new product, just insert
             await DBProd.insertProduct(product);
         }
         else{
-            if(product.hash !== existingProduct.hash){ // updated product
+
+            await DBProd.setField(sku, {delisted: false}); // if product was delisted before, reactivate it
+
+            if(product.hash !== existingProduct.hash){ // update product if anything changed
                 await DBProd.updateProduct(sku, product);
                 await DBProd.setField(sku, {uploaded_to_kaspi: false, accepted_by_kaspi: false});
             }
@@ -30,7 +29,7 @@ export async function updateProductsDatabase(productList){
 
     for (const [sku] of existing.entries()){
         if(!incoming.has(sku)){
-            // existing product got deleted in shopify side
+            // existing product got deleted in shopify side, delist it so it won't appear in xml
             await DBProd.setField(sku, {delisted: true});
         }
 
