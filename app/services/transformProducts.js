@@ -1,4 +1,4 @@
-import * as DBProdMap from "../db/dbmappings.js"
+import * as DBMap from "../db/dbmappings.js"
 import crypto from "crypto"
 import {metafieldMapping} from "../config/appMappings.js"
 
@@ -76,7 +76,7 @@ export async function transformProducts(variants){
 
 async function resolveCategory(category_title){
 
-    const category = await DBProdMap.getCategoryByTitle(category_title);
+    const category = await DBMap.getCategoryByTitle(category_title);
     
     if(!category){
         throw new Error(`Category not found. Input = ${category_title}`);
@@ -159,7 +159,7 @@ async function mapAttributes(category_code, metafields, options){
 
     const attributes = []; 
 
-    const allAttributesList = await DBProdMap.getAttributesByCategory(category_code);
+    const allAttributesList = await DBMap.getAttributesByCategory(category_code);
 
     const attributeMap = new Map(allAttributesList.map(attr=>[attr.code, attr]));
 
@@ -242,7 +242,7 @@ async function mapStaticAttributes(attributes, category_code, metafields, option
 
 
     // GENDER
-    const categoryGenders = await DBProdMap.getAttributeValues("Shoes*Gender", category_code);
+    const categoryGenders = await DBMap.getAttributeValues("Shoes*Gender", category_code);
 
     if(!categoryGenders || !categoryGenders[0] || !categoryGenders[0].value_name){
         throw new Error("Chosen category does not have specified genders");
@@ -255,7 +255,7 @@ async function mapStaticAttributes(attributes, category_code, metafields, option
     ); // just get whatever is default gender for category, i.e. Женские туфли -> для женщин
 
     // MODEL NAME
-    const shoeModelLegalValues = await DBProdMap.getAttributeValues("Shoes*Model", category_code);
+    const shoeModelLegalValues = await DBMap.getAttributeValues("Shoes*Model", category_code);
     const subcategoryMetafield = metafields.find(m => m.key === "subcategory");
 
     if (!subcategoryMetafield || !subcategoryMetafield.value){

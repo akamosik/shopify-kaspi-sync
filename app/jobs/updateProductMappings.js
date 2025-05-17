@@ -1,4 +1,4 @@
-import * as DBProdMap from "../db/dbmappings.js"
+import * as DBMap from "../db/dbmappings.js"
 import {pool} from "../config/dbConfig.js"
 import {getKaspiCategories, getKaspiAttributes, getKaspiAttributeValues} from "../api/kaspi/requests.js"
 import { selectedCategories } from "../config/appMappings.js"
@@ -9,19 +9,19 @@ export async function updateProductMappings(){
     try{
         await client.query("BEGIN");
 
-        await DBProdMap.resetProductMappings(client);
+        await DBMap.resetProductMappings(client);
 
         const categories = await getKaspiCategories(selectedCategories);
 
         for (const cat of categories){
-            await DBProdMap.insertCategory({
+            await DBMap.insertCategory({
                 code: cat.code, 
                 title: cat.title}, client);
 
             const attributes = await getKaspiAttributes(cat.code);
 
             const attriubutesPromises = attributes.map(async (attr) =>{
-                await DBProdMap.insertAttribute({
+                await DBMap.insertAttribute({
                     code: attr.code,
                     category_code: cat.code, 
                     type: attr.type,
@@ -34,7 +34,7 @@ export async function updateProductMappings(){
                     const attribute_values = await getKaspiAttributeValues(cat.code, attr.code); 
 
                     const valuesPromises = attribute_values.map(async (val)=>{
-                        await DBProdMap.insertAttributeValue({
+                        await DBMap.insertAttributeValue({
                             attribute_code: attr.code,
                             category_code: cat.code, 
                             value_code: val.code,

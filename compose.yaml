@@ -17,6 +17,8 @@ services:
       - SHOPIFY_TOKEN=${SHOPIFY_ACCESS_TOKEN}
       - KASPI_ENDPOINT=${KASPI_ENDPOINT}
       - KASPI_TOKEN=${KASPI_ACCESS_TOKEN}
+      - KASPI_COMPANY_NAME=${KASPI_COMPANY_NAME}
+      - KASPI_MERCHANT_ID=${KASPI_MERCHANT_ID}
     depends_on:
       kaspi_postgres:
         condition: service_healthy

@@ -5,5 +5,7 @@ export const shopifyConfig = {
 
 export const kaspiConfig = {
     endpoint: process.env.KASPI_ENDPOINT, 
-    token: process.env.KASPI_TOKEN
+    token: process.env.KASPI_TOKEN,
+    company_name: process.env.KASPI_COMPANY_NAME,
+    merchant_id: process.env.KASPI_MERCHANT_ID
 } 
