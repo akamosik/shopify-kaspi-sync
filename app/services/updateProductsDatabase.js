@@ -12,6 +12,10 @@ export async function updateProductsDatabase(productList){
 
         const existingProduct = existing.get(sku); 
 
+        console.log(product.title);
+        console.log(product.attributes);
+        console.log("\n");
+
         if (!existingProduct){
             // new product
             await DBProd.insertProduct(product);
